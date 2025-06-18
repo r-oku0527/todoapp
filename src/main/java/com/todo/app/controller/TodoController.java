@@ -24,6 +24,7 @@ public class TodoController {
 	@RequestMapping(value="/")
 	public String index(Model model) {
 		logger.info("アクセス: /");
+		logger.info("ログ出力");
 
 
 //		List<Todo> list = todoMapper.selectAll();
