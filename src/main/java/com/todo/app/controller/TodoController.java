@@ -1,17 +1,23 @@
 package com.todo.app.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import jakarta.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.todo.app.entity.Todo;
 import com.todo.app.mapper.TodoMapper;
+
 
 @Controller
 public class TodoController {
@@ -45,11 +51,22 @@ public class TodoController {
 
 	@RequestMapping(value="/add")
 	@ResponseBody
-	public Todo add(Todo todo) {
-		logger.info("アクセス: /add");
-		
-		todoMapper.add(todo);
-		return todo;
+	public Map<String, Object> add(@Valid Todo todo, BindingResult result) {
+	    logger.info("アクセス: /add");
+
+	    Map<String, Object> response = new HashMap<>();
+
+	    if (result.hasErrors()) {
+	        response.put("success", false);
+	        response.put("errors", result.getAllErrors());
+	        return response;
+	    }
+
+	    todoMapper.add(todo);
+	    response.put("success", true);
+	    response.put("todo", todo);
+	    return response;
+
 	}
 
 	@RequestMapping(value="/update")

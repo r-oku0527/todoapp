@@ -64,16 +64,31 @@ $('.button_for_show').click(function(){
 })
 
 //追加処理
-$('#add').click(function() {
+$('#add').click(function () {
     const params = $('#add_form').serializeArray();
-    $.post("/add",params).done(function(json){
-        const clone = $('#todes tr:first').clone(true);
-        clone.find('input[name="id"]').val(json.id);
-        clone.find('input[name="title"]').val(json.title);
-        clone.find('input[name="time_limit"]').val(json.time_limit);
-        $('#todes').append(clone[0]);
-    })
-})
+
+    $.post('/add', params)
+        .then(function (res) {
+            if (res.success) {
+                // タスク行を複製し、新規タスクを反映
+                const clone = $('#todes tr:first').clone(true);
+                clone.find('input[name="id"]').val(res.todo.id);
+                clone.find('input[name="title"]').val(res.todo.title);
+                clone.find('input[name="time_limit"]').val(res.todo.time_limit);
+                $('#todes').append(clone[0]);
+                // モーダル閉じてフォーム初期化
+                $('#modal').modal('hide');
+                $('#add_form')[0].reset();
+            } else {
+                // バリデーションエラー表示
+                const messages = res.errors.map(e => e.defaultMessage).join('\n');
+                alert(messages);
+            }
+        })
+        .fail(function () {
+            alert('通信に失敗しました。もう一度お試しください。');
+        });
+});
 
 //削除処理
 $('#delete').click(function(){
