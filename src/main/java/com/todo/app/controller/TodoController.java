@@ -30,7 +30,7 @@ public class TodoController {
 	@RequestMapping(value="/")
 	public String index(Model model) {
 		logger.info("アクセス: /");
-		logger.info("ログ出力");
+		logger.info("ログ出力aaa");
 
 
 //		List<Todo> list = todoMapper.selectAll();
